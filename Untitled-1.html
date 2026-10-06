@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jinson John Pereira | F&B Operations Manager & Executive Chef</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#0b0c0e',
+                            card: '#14161a',
+                            border: '#232730',
+                            accent: '#d4af37', // Luxury Gold
+                            accentHover: '#f1c40f',
+                            text: '#f3f4f6',
+                            muted: '#9ca3af'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0b0c0e;
+            color: #f3f4f6;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Slide View Container */
+        .mode-slides #portfolioContainer {
+            display: flex;
+            width: 500vw;
+            height: calc(100vh - 70px);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+
+        .mode-slides .slide-section {
+            width: 100vw;
+            height: 100%;
+            flex-shrink: 0;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+            box-sizing: border-box;
+        }
+
+        /* Scroll View Container */
+        .mode-scroll #portfolioContainer {
+            display: block;
+            width: 100%;
+            height: auto;
+            transform: none !important;
+        }
+
+        .mode-scroll .slide-section {
+            width: 100%;
+            min-height: auto;
+            padding: 5rem 1.5rem;
+            border-bottom: 1px solid #232730;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0c0e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #232730;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d4af37;
+        }
+
+        /* Gallery Card Aspect & Overlay */
+        .gallery-card {
+            position: relative;
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            border: 1px solid #232730;
+            background-color: #14161a;
+        }
+
+        .gallery-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-card:hover img {
+            transform: scale(1.08);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(11, 12, 14, 0.95) 0%, rgba(11, 12, 14, 0.2) 60%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.25rem;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-card:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        /* Glassmorphic card styling */
+        .glass-card {
+            background: rgba(20, 22, 26, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+<body class="mode-slides">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-50 bg-brand-bg/90 backdrop-blur-md border-b border-brand-border h-[70px] flex items-center justify-between px-4 sm:px-8">
+        <!-- Logo / Name -->
+        <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-full bg-brand-accent/20 border border-brand-accent flex items-center justify-center font-serif text-brand-accent font-bold">
+                J
+            </div>
+            <div>
+                <h1 class="font-serif text-lg sm:text-xl font-bold tracking-wider text-white">JINSON JOHN PEREIRA</h1>
+                <p class="text-[10px] text-brand-accent tracking-widest uppercase font-medium hidden sm:block">F&B Operations Manager & Executive Chef</p>
+            </div>
+        </div>
+
+        <!-- View Mode Toggle Buttons -->
+        <div class="flex items-center space-x-2 bg-brand-card p-1 rounded-lg border border-brand-border">
+            <button id="btnSlideMode" onclick="setMode('slides')" class="flex items-center space-x-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-all bg-brand-accent text-black shadow-lg">
+                <i class="fa-solid fa-sliders"></i>
+                <span class="hidden md:inline">SLIDE DECK</span>
+            </button>
+            <button id="btnScrollMode" onclick="setMode('scroll')" class="flex items-center space-x-2 px-3 py-1.5 rounded-md text-xs font-semibold text-brand-muted hover:text-white transition-all">
+                <i class="fa-solid fa-scroll"></i>
+                <span class="hidden md:inline">WEB SCROLL</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Slide Navigation Bar (Only active in Slide Deck Mode) -->
+    <div id="slideControls" class="fixed bottom-6 right-6 z-40 flex items-center space-x-3 bg-brand-card/90 backdrop-blur-md px-4 py-2.5 rounded-full border border-brand-border shadow-2xl">
+        <button onclick="prevSlide()" class="w-9 h-9 rounded-full bg-brand-bg hover:bg-brand-accent hover:text-black text-white flex items-center justify-center transition-all border border-brand-border">
+            <i class="fa-solid fa-chevron-left text-sm"></i>
+        </button>
+        <span id="slideIndicator" class="text-xs font-mono font-bold tracking-widest text-brand-accent px-2">01 / 05</span>
+        <button onclick="nextSlide()" class="w-9 h-9 rounded-full bg-brand-bg hover:bg-brand-accent hover:text-black text-white flex items-center justify-center transition-all border border-brand-border">
+            <i class="fa-solid fa-chevron-right text-sm"></i>
+        </button>
+    </div>
+
+    <!-- Main Content Container -->
+    <main id="portfolioContainer">
+
+        <!-- ==========================================
+             SLIDE 1: HERO COVER
+             ========================================== -->
+        <section id="slide-1" class="slide-section flex items-center justify-center">
+            <div class="max-w-6xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Left Details -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center space-x-2 bg-brand-accent/10 border border-brand-accent/30 text-brand-accent text-xs font-semibold px-3.5 py-1.5 rounded-full">
+                        <span class="w-2 h-2 rounded-full bg-brand-accent animate-pulse"></span>
+                        <span>11+ Years Experience • Abu Dhabi, UAE</span>
+                    </div>
+
+                    <h2 class="text-4xl sm:text-6xl lg:text-7xl font-serif font-bold tracking-tight text-white leading-tight">
+                        Culinary Leadership & <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-amber-200 to-amber-500">F&B Operations</span>
+                    </h2>
+
+                    <p class="text-lg text-brand-muted max-w-xl font-light leading-relaxed">
+                        Multi-brand F&B operational excellence, central kitchen scalability, menu innovation, and complete kitchen leadership across UAE and international markets.
+                    </p>
+
+                    <div class="pt-4 flex flex-wrap gap-4">
+                        <a href="#contact" onclick="goToSlide(4)" class="px-6 py-3 rounded-lg bg-brand-accent text-black font-semibold text-sm hover:bg-brand-accentHover transition-all shadow-lg flex items-center space-x-2">
+                            <span>Get In Touch</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </a>
+                        <a href="#gallery" onclick="goToSlide(2)" class="px-6 py-3 rounded-lg border border-brand-border text-white hover:border-brand-accent font-semibold text-sm transition-all flex items-center space-x-2">
+                            <span>View Culinary Gallery</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Cover Image Stack -->
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="relative w-full max-w-md">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-brand-accent to-amber-600 rounded-2xl blur opacity-25"></div>
+                        <div class="relative glass-card rounded-2xl p-4 overflow-hidden border border-brand-border">
+                            <img src="Assets/jinson_jpeg.jpeg" 
+                                 onerror="this.onerror=null; this.src='Assets/Untitled design (10).png'; this.onerror=function(){this.src='https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=800&q=80'};" 
+                                 alt="Jinson John Pereira Profile" 
+                                 class="w-full h-[400px] object-cover rounded-xl shadow-xl">
+                            <div class="mt-4 p-3 bg-brand-bg/80 rounded-lg border border-brand-border/50 flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs text-brand-muted">Current Role</p>
+                                    <p class="text-sm font-semibold text-white">F&B Operations Manager</p>
+                                </div>
+                                <span class="text-xs px-2.5 py-1 bg-brand-accent/20 text-brand-accent border border-brand-accent/40 rounded-md font-mono">UAE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SLIDE 2: ABOUT ME & EDUCATION
+             ========================================== -->
+        <section id="slide-2" class="slide-section flex items-center justify-center">
+            <div class="max-w-6xl w-full mx-auto space-y-10">
+                <!-- Header -->
+                <div class="border-b border-brand-border pb-4">
+                    <p class="text-xs font-mono text-brand-accent tracking-widest uppercase">Professional Overview</p>
+                    <h2 class="text-3xl sm:text-4xl font-serif font-bold text-white mt-1">About Me & Background</h2>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <!-- Bio Text -->
+                    <div class="lg:col-span-6 space-y-6">
+                        <div class="glass-card p-6 sm:p-8 rounded-2xl space-y-4">
+                            <h3 class="text-xl font-semibold text-brand-accent flex items-center space-x-2">
+                                <i class="fa-solid fa-user-tie"></i>
+                                <span>Operational Excellence</span>
+                            </h3>
+                            <p class="text-brand-muted text-sm sm:text-base leading-relaxed">
+                                Experienced F&B Operations Manager with over 11 years of industry experience in Abu Dhabi and UAE F&B India market, including supplier networks, procurement channels, packaging vendors, and operational staff, ensuring smooth operations, quality control, and business growth support.
+                            </p>
+                            <div class="grid grid-cols-2 gap-4 pt-4 border-t border-brand-border/60">
+                                <div>
+                                    <p class="text-2xl font-bold text-white font-serif">11+</p>
+                                    <p class="text-xs text-brand-muted">Years Experience</p>
+                                </div>
+                                <div>
+                                    <p class="text-2xl font-bold text-white font-serif">40+</p>
+                                    <p class="text-xs text-brand-muted">Team Members Led</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Education Cards -->
+                    <div class="lg:col-span-6 space-y-4">
+                        <h3 class="text-lg font-semibold text-white flex items-center space-x-2 mb-2">
+                            <i class="fa-solid fa-graduation-cap text-brand-accent"></i>
+                            <span>Education Credentials</span>
+                        </h3>
+
+                        <!-- Edu Card 1 -->
+                        <div class="glass-card p-5 rounded-xl border border-brand-border hover:border-brand-accent/50 transition-all">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-semibold text-white text-base">Bachelor of Hotel Management (B.H.M)</h4>
+                                    <p class="text-xs text-brand-accent mt-0.5">Sihasarosh Institute of Hotel Administration</p>
+                                </div>
+                                <span class="text-xs font-mono bg-brand-card px-2.5 py-1 rounded text-brand-muted border border-brand-border">Degree</span>
+                            </div>
+                            <p class="text-xs text-brand-muted mt-3 leading-relaxed">
+                                Comprehensive study in hotel management, culinary preparation, kitchen governance, food safety standards, and hospitality operations.
+                            </p>
+                        </div>
+
+                        <!-- Edu Card 2 -->
+                        <div class="glass-card p-5 rounded-xl border border-brand-border hover:border-brand-accent/50 transition-all">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-semibold text-white text-base">Higher Secondary Education</h4>
+                                    <p class="text-xs text-brand-accent mt-0.5">St. Thomas Higher Secondary School, Kozhencherry</p>
+                                </div>
+                                <span class="text-xs font-mono bg-brand-card px-2.5 py-1 rounded text-brand-muted border border-brand-border">SSLC & HSC</span>
+                            </div>
+                            <p class="text-xs text-brand-muted mt-3 leading-relaxed">
+                                Completed Secondary and Higher Secondary schooling with academic focus on foundational management and science discipline.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SLIDE 3: CULINARY & OPERATIONS GALLERY
+             ========================================== -->
+        <section id="slide-3" class="slide-section flex items-center justify-center">
+            <div class="max-w-6xl w-full mx-auto space-y-6">
+                <!-- Header -->
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between border-b border-brand-border pb-4 gap-2">
+                    <div>
+                        <p class="text-xs font-mono text-brand-accent tracking-widest uppercase">Visual Portfolio</p>
+                        <h2 class="text-3xl sm:text-4xl font-serif font-bold text-white mt-1">Culinary & Operations Gallery</h2>
+                    </div>
+                    <p class="text-xs text-brand-muted">8 Curated Culinary & Concept Creations</p>
+                </div>
+
+                <!-- Responsive Gallery Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+                    <!-- Image 1 -->
+                    <div class="gallery-card">
+                        <img src="Assets/attachments/Arabic Salad bowl.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/600x450/14161a/d4af37?text=Arabic+Salad+Bowl';" 
+                             alt="Arabic Salad Bowl">
+                        <div class="gallery-overlay">
+                            <span class="text-[10px] font-mono uppercase text-brand-accent tracking-wider">Culinary</span>
+                            <h4 class="text-sm font-semibold text-white">Arabic Salad Bowl</h4>
+                        </div>
+                    </div>
+
+                    <!-- Image 2 -->
+                    <div class="gallery-card">
+                        <img src="Assets/attachments/Beef Cocount Bowl.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/600x450/14161a/d4af37?text=Beef+Coconut+Bowl';" 
+                             alt="Beef Coconut Bowl">
+                        <div class="gallery-overlay">
+                            <span class="text-[10px] font-mono uppercase text-brand-accent tracking-wider">Culinary</span>
+                            <h4 class="text-sm font-semibold text-white">Beef Coconut Bowl</h4>
+                        </div>
+                    </div>
+
+                    <!-- Image 3 -->
+                    <div class="gallery-card">
+                        <img src="Assets/attachments/Beef Shawarma Plate.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/600x450/14161a/d4af37?text=Beef+Shawarma+Plate';" 
+                             alt="Beef Shawarma Plate">
+                        <div class="gallery-overlay">
+                            <span class="text-[10px] font-mono uppercase text-brand-accent tracking-wider">Menu Development</span>
+                            <h4 class="text-sm font-semibold text-white">Beef Shawarma Plate</h4>
+                        </div>
+                    </div>
+
+                    <!-- Image 4 -->
+                    <div class="gallery-card">
+                        <img src="Assets/attachments/Beef teriyaki bowl.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/600x450/14161a/d4af37?text=Beef+Teriyaki+Bowl';" 
+                             alt="Beef Teriyaki Bowl">
+                        <div class="gallery-overlay">
+                            <span class="text-[10px] font-mono uppercase text-brand-accent tracking-wider">Culinary</span>
+                            <h4 class="text-sm font-semibold text-white">Beef Teriyaki Bowl</h4>
+                        </div>
+                    </div>
+
+                    <!-- Image 5 -->
+                    <div class="gallery-card">
+                        <img src="Assets/attachments/Buffalo Chicken With Mashed Po....jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/600x450/14161a/d4af37?text=Buffalo+Chicken';" 
+                             alt="Buffalo Chicken & Mashed Potatoes">
+                        <div class="gallery-overlay">
+                            <span class="text-[10px] font-mono uppercase text-brand-accent tracking-wider">Culinary</span>
+                            <h4 class="text-sm font-semibold text-white">Buffalo Chicken & Mashed Potatoes</h4>
+                        </div>
+                    </div>
+
+                    <!-- Image 6 -->
+                    <div class="gallery-card">
+                        <img src="Assets/attachments/Chicken strip bowl.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/600x450/14161a/d4af37?text=Chicken+Strip+Bowl';" 
+                             alt="Chicken Strip Bowl">
+                        <div class="gallery-overlay">
+                            <span class="text-[10px] font-mono uppercase text-brand-accent tracking-wider">Culinary</span>
+                            <h4 class="text-sm font-semibold text-white">Chicken Strip Bowl</h4>
+                        </div>
+                    </div>
+
+                    <!-- Image 7 -->
+                    <div class="gallery-card">
+                        <img src="Assets/attachments/grilled chicken bowl.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/600x450/14161a/d4af37?text=Grilled+Chicken+Bowl';" 
+                             alt="Grilled Chicken Bowl">
+                        <div class="gallery-overlay">
+                            <span class="text-[10px] font-mono uppercase text-brand-accent tracking-wider">Culinary</span>
+                            <h4 class="text-sm font-semibold text-white">Grilled Chicken Bowl</h4>
+                        </div>
+                    </div>
+
+                    <!-- Image 8 -->
+                    <div class="gallery-card">
+                        <img src="Assets/attachments/medetarian salad.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/600x450/14161a/d4af37?text=Mediterranean+Salad';" 
+                             alt="Mediterranean Salad">
+                        <div class="gallery-overlay">
+                            <span class="text-[10px] font-mono uppercase text-brand-accent tracking-wider">Culinary</span>
+                            <h4 class="text-sm font-semibold text-white">Mediterranean Salad</h4>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SLIDE 4: KEY EXPERIENCE & COMPETENCIES
+             ========================================== -->
+        <section id="slide-4" class="slide-section flex items-center justify-center">
+            <div class="max-w-6xl w-full mx-auto space-y-8">
+                <!-- Header -->
+                <div class="border-b border-brand-border pb-4">
+                    <p class="text-xs font-mono text-brand-accent tracking-widest uppercase">Core Expertise</p>
+                    <h2 class="text-3xl sm:text-4xl font-serif font-bold text-white mt-1">Experience & Competencies</h2>
+                </div>
+
+                <!-- 4 Key Pillars Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                    <!-- Pillar 1 -->
+                    <div class="glass-card p-6 rounded-2xl border border-brand-border hover:border-brand-accent transition-all group">
+                        <div class="w-12 h-12 rounded-xl bg-brand-accent/10 border border-brand-accent/30 flex items-center justify-center text-brand-accent mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-utensils text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-white mb-2">Central Kitchen Production</h3>
+                        <p class="text-xs text-brand-muted leading-relaxed">
+                            Scalable production workflows, ingredient yield management, standardized preparation protocols, and high-volume consistency.
+                        </p>
+                    </div>
+
+                    <!-- Pillar 2 -->
+                    <div class="glass-card p-6 rounded-2xl border border-brand-border hover:border-brand-accent transition-all group">
+                        <div class="w-12 h-12 rounded-xl bg-brand-accent/10 border border-brand-accent/30 flex items-center justify-center text-brand-accent mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-book-open text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-white mb-2">Menu Creation & Plating</h3>
+                        <p class="text-xs text-brand-muted leading-relaxed">
+                            Recipe engineering, food cost control, aesthetically refined plating concepts, and consumer-focused menu development.
+                        </p>
+                    </div>
+
+                    <!-- Pillar 3 -->
+                    <div class="glass-card p-6 rounded-2xl border border-brand-border hover:border-brand-accent transition-all group">
+                        <div class="w-12 h-12 rounded-xl bg-brand-accent/10 border border-brand-accent/30 flex items-center justify-center text-brand-accent mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-users text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-white mb-2">40+ Team Leadership</h3>
+                        <p class="text-xs text-brand-muted leading-relaxed">
+                            Multicultural kitchen team management, performance coaching, cross-department communication, and shift scheduling.
+                        </p>
+                    </div>
+
+                    <!-- Pillar 4 -->
+                    <div class="glass-card p-6 rounded-2xl border border-brand-border hover:border-brand-accent transition-all group">
+                        <div class="w-12 h-12 rounded-xl bg-brand-accent/10 border border-brand-accent/30 flex items-center justify-center text-brand-accent mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-shield-halved text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-white mb-2">HACCP & Hygiene Control</h3>
+                        <p class="text-xs text-brand-muted leading-relaxed">
+                            Strict compliance with Abu Dhabi Food Control Authority (ADFCA) regulations, audits, temperature tracking, and safety protocols.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SLIDE 5: CONTACT & CONNECT
+             ========================================== -->
+        <section id="slide-5" class="slide-section flex items-center justify-center">
+            <div class="max-w-4xl w-full mx-auto text-center space-y-8">
+
+                <div class="space-y-3">
+                    <span class="text-xs font-mono text-brand-accent tracking-widest uppercase bg-brand-accent/10 px-3 py-1 rounded-full border border-brand-accent/30">Available For New Opportunities</span>
+                    <h2 class="text-4xl sm:text-6xl font-serif font-bold text-white tracking-tight">LET'S WORK TOGETHER</h2>
+                    <p class="text-base text-brand-muted max-w-lg mx-auto">
+                        Based in Abu Dhabi, UAE. Open for F&B Operations Management, Executive Chef roles, and multi-brand culinary consultations.
+                    </p>
+                </div>
+
+                <!-- Contact Cards Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+
+                    <!-- LinkedIn -->
+                    <a href="https://www.linkedin.com/in/jinson-pereira-872a80253" target="_blank" rel="noopener noreferrer" class="glass-card p-6 rounded-2xl border border-brand-border hover:border-brand-accent transition-all flex flex-col items-center justify-center space-y-3 group">
+                        <div class="w-12 h-12 rounded-full bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-brand-muted">LinkedIn Profile</p>
+                            <p class="text-sm font-semibold text-white group-hover:text-brand-accent transition-colors">Jinson Pereira</p>
+                        </div>
+                    </a>
+
+                    <!-- Email -->
+                    <a href="mailto:godwilltakeaway4646@gmail.com" class="glass-card p-6 rounded-2xl border border-brand-border hover:border-brand-accent transition-all flex flex-col items-center justify-center space-y-3 group">
+                        <div class="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-brand-muted">Email Directly</p>
+                            <p class="text-xs font-semibold text-white group-hover:text-brand-accent transition-colors truncate max-w-[200px]">godwilltakeaway4646@gmail.com</p>
+                        </div>
+                    </a>
+
+                    <!-- Phone -->
+                    <a href="tel:+971503992578" class="glass-card p-6 rounded-2xl border border-brand-border hover:border-brand-accent transition-all flex flex-col items-center justify-center space-y-3 group">
+                        <div class="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-brand-muted">Phone / WhatsApp</p>
+                            <p class="text-sm font-semibold text-white group-hover:text-brand-accent transition-colors">+971 503992578</p>
+                        </div>
+                    </a>
+
+                </div>
+
+                <div class="pt-8 border-t border-brand-border/60 text-xs text-brand-muted flex flex-col sm:flex-row justify-between items-center gap-2">
+                    <p>© 2026 Jinson John Pereira. All rights reserved.</p>
+                    <p class="font-mono text-[11px]">Abu Dhabi, United Arab Emirates</p>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // State variables
+        let currentSlide = 0;
+        const totalSlides = 5;
+        let activeMode = 'slides'; // 'slides' or 'scroll'
+
+        // Set Slide or Scroll Mode
+        function setMode(mode) {
+            activeMode = mode;
+            const body = document.body;
+            const btnSlide = document.getElementById('btnSlideMode');
+            const btnScroll = document.getElementById('btnScrollMode');
+            const slideControls = document.getElementById('slideControls');
+
+            if (mode === 'slides') {
+                body.className = 'mode-slides';
+                btnSlide.className = 'flex items-center space-x-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-all bg-brand-accent text-black shadow-lg';
+                btnScroll.className = 'flex items-center space-x-2 px-3 py-1.5 rounded-md text-xs font-semibold text-brand-muted hover:text-white transition-all';
+                slideControls.style.display = 'flex';
+                updateSlidePosition();
+            } else {
+                body.className = 'mode-scroll';
+                btnScroll.className = 'flex items-center space-x-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-all bg-brand-accent text-black shadow-lg';
+                btnSlide.className = 'flex items-center space-x-2 px-3 py-1.5 rounded-md text-xs font-semibold text-brand-muted hover:text-white transition-all';
+                slideControls.style.display = 'none';
+            }
+        }
+
+        // Navigation between slides
+        function goToSlide(index) {
+            if (activeMode === 'scroll') {
+                const target = document.getElementById(`slide-${index + 1}`);
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+            if (index >= 0 && index < totalSlides) {
+                currentSlide = index;
+                updateSlidePosition();
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlidePosition();
+            } else {
+                currentSlide = 0; // loop around
+                updateSlidePosition();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlidePosition();
+            } else {
+                currentSlide = totalSlides - 1; // loop to end
+                updateSlidePosition();
+            }
+        }
+
+        function updateSlidePosition() {
+            if (activeMode !== 'slides') return;
+            const container = document.getElementById('portfolioContainer');
+            const indicator = document.getElementById('slideIndicator');
+            
+            container.style.transform = `translateX(-${currentSlide * 100}vw)`;
+            indicator.textContent = `0${currentSlide + 1} / 0${totalSlides}`;
+        }
+
+        // Keyboard Arrow Navigation
+        document.addEventListener('keydown', (e) => {
+            if (activeMode !== 'slides') return;
+            if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                prevSlide();
+            }
+        });
+    </script>
+</body>
+</html>
